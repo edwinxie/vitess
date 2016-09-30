@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vitess / About</title>
+    <title>Vitess / Launching Vitess</title>
 
         <!-- Webfont -->
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
@@ -35,7 +35,7 @@
 
 
     <!-- metadata -->
-    <meta name="og:title" content="Vitess / About"/>
+    <meta name="og:title" content="Vitess / Launching Vitess"/>
     <meta name="og:image" content="/images/vitess-logo-large-cropped-2.png"/>
     <meta name="og:description" content="Vitess is a database clustering system for horizontal scaling of MySQL."/>
 
@@ -51,7 +51,7 @@
 
     
   </head>
-  <body class="" id="top_of_page">
+  <body class="docs" id="top_of_page">
 
     <span id="toc-depth" data-toc-depth="h2,h3"></span>
 
@@ -164,7 +164,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-9">
-        <h1>About</h1>
+        <h1>Launching Vitess</h1>
       </div>
     </div>
   </div>
@@ -172,33 +172,101 @@
 
 
 <div class="container">
-  <div id="main" role="main">
-	<article class="wrap" itemscope itemtype="http://schema.org/Article">
-		
-		
+    <div class="row scroll-margin" id="toc-content-row">
+    <div class="col-md-2" id="leftCol">
+      <ul class="nav nav-stacked mobile-left-nav-menu" id="sidebar">
+                <li class="submenu">
+          <h4 class="arrow-r no-top-margin">Overview</h4>
+          <ul style="display: none">
+            <li><a href="/overview/">What is Vitess</a></li>
+            <li><a href="/overview/scaling-mysql.html">Scaling MySQL with Vitess</a></li>
+            <li><a href="/overview/concepts.html">Key Concepts</a></li>
+          </ul>
+        </li>
+        <li class="submenu">
+          <h4 class="arrow-r">Getting Started</h4>
+          <ul style="display: none">
+            <li style="padding-bottom: 0"><a href="/getting-started/">Run Vitess on Kubernetes</a>
+              <ul style="display: block">
+                <li style="padding-bottom: 0"><a href="/getting-started/docker-build.html">Custom Docker Build</a></li>
+              </ul>
+            </li>
+            <li><a href="/getting-started/local-instance.html">Run Vitess Locally</a></li>
+          </ul>
+        </li>
+        <li class="submenu">
+          <h4 class="arrow-r">User Guide</h4>
+          <ul style="display: none">
+            <li><a href="/user-guide/introduction.html">Introduction</a>
+            <li><a href="/user-guide/client-libraries.html">Client Libraries</a>
+            <li><a href="/user-guide/backup-and-restore.html">Backing Up Data</a>
+            <li><a href="/user-guide/reparenting.html">Reparenting</a></li>
+            <li style="padding-bottom: 0"><a href="/user-guide/schema-management.html">Schema Management</a></li>
+              <ul style="display: block">
+                <li style="padding-bottom: 0"><a href="/user-guide/pivot-schema-changes.html">Pivot Schema Changes (Tutorial)</a></li>
+              </ul>
+            <li style="padding-bottom: 0"><a href="/user-guide/sharding.html">Sharding</a>
+              <ul style="display: block">
+                <li><a href="/user-guide/horizontal-sharding.html">Horizontal Sharding (Codelab)</a></li>
+                <li style="padding-bottom: 0"><a href="/user-guide/sharding-kubernetes.html">Sharding in Kubernetes (Codelab)</a></li>
+              </ul>
+            </li>
+            <li><a href="/user-guide/vitess-replication.html">Vitess and Replication</a></li>
+            <li><a href="/user-guide/transport-security-model.html">Transport Security Model</a></li>
+            <li style="padding-bottom: 0"><a href="/user-guide/launching.html">Launching</a>
+              <ul style="display: block">
+                <li><a href="/user-guide/scalability-philosophy.html">Scalability Philosophy</a></li>
+                <li><a href="/user-guide/production-planning.html">Production Planning</a></li>
+                <li><a href="/user-guide/server-configuration.html">Server Configuration</a></li>
+                <li style="padding-bottom: 0"><a href="/user-guide/troubleshooting.html">Troubleshooting</a></li>
+              </ul>
+            </li>
+            <li><a href="/user-guide/upgrading.html">Upgrading</a></li>
+          </ul>
+        </li>
+        <li class="submenu">
+          <h4 class="arrow-r">Reference Guides</h4>
+          <ul style="display: none">
+            <li><a href="/reference/vitess-api.html">Vitess API</a>
+            <li><a href="/reference/vtctl.html">vtctl Commands</a>
+          </ul>
+        </li>
+        <li class="submenu">
+          <h4 class="arrow-r">Other Resources</h4>
+          <ul style="display: none">
+            <li><a href="/resources/presentations.html">Presentations</a>
+            <li><a href="http://blog.vitess.io/">Blog</a>
+          </ul>
+        </li>
 
-		<div class="page-title">
-			<h1>About</h1>
-		</div>
-		<div class="inner-wrap">
-			<nav class="toc"></nav>
-			<div id="content" class="page-content" itemprop="articleBody">
-				<p>This is a work in progress.</p>
+        <div>
+          <form method="get" action="/search/">
+            <input id="search-form" name="q" type="text" placeholder="Search">
+          </form>
+        </div>
 
-				<hr />
-				<footer class="page-footer">
-					
-					
-					
+      </ul>
+    </div>
+    <div class="col-md-3" id="rightCol">
+      <div class="nav nav-stacked" id="tocSidebar">
+        <div id="toc"></div>
+      </div>
+    </div>
+    <div class="col-md-7" id="centerCol">
+      <div id="centerTextCol">
+        <p>This section offers guidelines on how to configure and manage Vitess
+in a production environment.</p>
 
-				</footer>
-				<aside>
-					
-				</aside>
-			</div>
-		</div>
-	</article>
-</div>
+<ul>
+<li><a href="/user-guide/scalability-philosophy.html">Scalability Philosophy</a></li>
+<li><a href="/user-guide/production-planning.html">Production Planning</a></li>
+<li><a href="/user-guide/server-configuration.html">Server Configuration</a></li>
+<li><a href="/user-guide/troubleshooting.html">Troubleshooting</a></li>
+</ul>
+
+      </div>
+    </div>
+  </div>
 
 </div>
 

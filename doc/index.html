@@ -74,7 +74,8 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right" id="standard-menu-links">
-        <li><a href="/overview/">Guides</a></li>
+        <li><a href="/overview/">Overview</a></li>
+        <li><a href="/user-guide/introduction.html">Guides</a></li>
         <li><a href="/reference/vitess-api.html">Reference</a></li>
         <li><a href="http://blog.vitess.io">Blog</a></li>
         <li><a href="https://github.com/youtube/vitess"><i class="fa fa-github"></i> GitHub</a></li>
@@ -120,6 +121,14 @@
             </li>
             <li><a href="/user-guide/vitess-replication.html">Vitess and Replication</a></li>
             <li><a href="/user-guide/transport-security-model.html">Transport Security Model</a></li>
+            <li style="padding-bottom: 0"><a href="/user-guide/launching.html">Launching</a>
+              <ul style="display: block">
+                <li><a href="/user-guide/scalability-philosophy.html">Scalability Philosophy</a></li>
+                <li><a href="/user-guide/production-planning.html">Production Planning</a></li>
+                <li><a href="/user-guide/server-configuration.html">Server Configuration</a></li>
+                <li style="padding-bottom: 0"><a href="/user-guide/troubleshooting.html">Troubleshooting</a></li>
+              </ul>
+            </li>
             <li><a href="/user-guide/upgrading.html">Upgrading</a></li>
           </ul>
         </li>
@@ -333,6 +342,16 @@ Provide a mechanism to support atomic commits for distributed transactions acros
 
 
   <article class="tile" itemscope itemtype="http://schema.org/Article">
+  <a href="http://vitess.io/doc/Troubleshooting/" title="Troubleshooting" class="post-teaser">
+    <img src="http://vitess.io/images/400x250.gif" alt="teaser" itemprop="image">
+  </a>
+<!--  <p class="entry-date date published"><time datetime="2015-01-01" itemprop="datePublished">January 01, 2015</time></p> -->
+  <h2 class="post-title" itemprop="name"><a href="http://vitess.io/doc/Troubleshooting/">Troubleshooting</a></h2>
+  <p class="post-excerpt" itemprop="description">If there is a problem in the system, one or many alerts would typically fire. If a problem was found through means other than an alert, then the alert system...</p>
+</article>
+
+
+  <article class="tile" itemscope itemtype="http://schema.org/Article">
   <a href="http://vitess.io/doc/TopologyService/" title="TopologyService" class="post-teaser">
     <img src="http://vitess.io/images/400x250.gif" alt="teaser" itemprop="image">
   </a>
@@ -386,6 +405,20 @@ sharding works in ...</p>
 
 
   <article class="tile" itemscope itemtype="http://schema.org/Article">
+  <a href="http://vitess.io/doc/ServerConfiguration/" title="ServerConfiguration" class="post-teaser">
+    <img src="http://vitess.io/images/400x250.gif" alt="teaser" itemprop="image">
+  </a>
+<!--  <p class="entry-date date published"><time datetime="2015-01-01" itemprop="datePublished">January 01, 2015</time></p> -->
+  <h2 class="post-title" itemprop="name"><a href="http://vitess.io/doc/ServerConfiguration/">ServerConfiguration</a></h2>
+  <p class="post-excerpt" itemprop="description">MySQL
+
+Vitess has some requirements on how MySQL should be configured. These will be detailed below.
+
+As a reminder, semi-sync replication is highly recommen...</p>
+</article>
+
+
+  <article class="tile" itemscope itemtype="http://schema.org/Article">
   <a href="http://vitess.io/doc/SchemaManagement/" title="SchemaManagement" class="post-teaser">
     <img src="http://vitess.io/images/400x250.gif" alt="teaser" itemprop="image">
   </a>
@@ -404,6 +437,20 @@ Table definitions identi...</p>
 <!--  <p class="entry-date date published"><time datetime="2015-01-01" itemprop="datePublished">January 01, 2015</time></p> -->
   <h2 class="post-title" itemprop="name"><a href="http://vitess.io/doc/ScalingMySQL/">ScalingMySQL</a></h2>
   <p class="post-excerpt" itemprop="description">Traditionally, it&#39;s been difficult to scale a MySQL-based database to an arbitrary size. Since MySQL lacks the out-of-the-box multi-instance support requ...</p>
+</article>
+
+
+  <article class="tile" itemscope itemtype="http://schema.org/Article">
+  <a href="http://vitess.io/doc/ScalabilityPhilosophy/" title="ScalabilityPhilosophy" class="post-teaser">
+    <img src="http://vitess.io/images/400x250.gif" alt="teaser" itemprop="image">
+  </a>
+<!--  <p class="entry-date date published"><time datetime="2015-01-01" itemprop="datePublished">January 01, 2015</time></p> -->
+  <h2 class="post-title" itemprop="name"><a href="http://vitess.io/doc/ScalabilityPhilosophy/">ScalabilityPhilosophy</a></h2>
+  <p class="post-excerpt" itemprop="description">Scalability problems can be solved using many approaches. This document describes Vitess’ approach to address these problems.
+
+Small instances
+
+When deciding...</p>
 </article>
 
 
@@ -433,6 +480,20 @@ A few idea...</p>
   <p class="post-excerpt" itemprop="description">Reparenting is the process of changing a shard&#39;s master tablet
 from one host to another or changing a slave tablet to have a
 different master. Reparentin...</p>
+</article>
+
+
+  <article class="tile" itemscope itemtype="http://schema.org/Article">
+  <a href="http://vitess.io/doc/ProductionPlanning/" title="ProductionPlanning" class="post-teaser">
+    <img src="http://vitess.io/images/400x250.gif" alt="teaser" itemprop="image">
+  </a>
+<!--  <p class="entry-date date published"><time datetime="2015-01-01" itemprop="datePublished">January 01, 2015</time></p> -->
+  <h2 class="post-title" itemprop="name"><a href="http://vitess.io/doc/ProductionPlanning/">ProductionPlanning</a></h2>
+  <p class="post-excerpt" itemprop="description">Provisioning
+
+Estimating total resources
+
+Although Vitess helps you scale indefinitely, the various layers do consume CPU and memory. Currently, the cost of ...</p>
 </article>
 
 
@@ -508,13 +569,13 @@ A q...</p>
   </a>
 <!--  <p class="entry-date date published"><time datetime="2015-01-01" itemprop="datePublished">January 01, 2015</time></p> -->
   <h2 class="post-title" itemprop="name"><a href="http://vitess.io/doc/LaunchingVitess/">LaunchingVitess</a></h2>
-  <p class="post-excerpt" itemprop="description">Draft
+  <p class="post-excerpt" itemprop="description">This section offers guidelines on how to configure and manage Vitess
+in a production environment.
 
-This document gives you guidelines on how to configure and manage Vitess in a production environment.
 
-Vitess Philosophy
-
-Scalability problems can be ...</p>
+Scalability Philosophy
+Production Planning
+Server Configu...</p>
 </article>
 
 

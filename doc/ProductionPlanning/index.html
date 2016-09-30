@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vitess / Presentations and Videos</title>
+    <title>Vitess / ProductionPlanning</title>
 
         <!-- Webfont -->
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
@@ -35,7 +35,7 @@
 
 
     <!-- metadata -->
-    <meta name="og:title" content="Vitess / Presentations and Videos"/>
+    <meta name="og:title" content="Vitess / ProductionPlanning"/>
     <meta name="og:image" content="/images/vitess-logo-large-cropped-2.png"/>
     <meta name="og:description" content="Vitess is a database clustering system for horizontal scaling of MySQL."/>
 
@@ -164,7 +164,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-9">
-        <h1>Presentations and Videos</h1>
+        <h1>ProductionPlanning</h1>
       </div>
     </div>
   </div>
@@ -254,65 +254,80 @@
     </div>
     <div class="col-md-7" id="centerCol">
       <div id="centerTextCol">
-        <h2 id="percona-live-2016">Percona Live 2016</h2>
+        <h2 id="provisioning">Provisioning</h2>
 
-<p><a href="https://github.com/sougou">Sugu</a> and <a href="https://github.com/enisoc">Anthony</a>
-showed what it looks like to use Vitess now that
-<a href="http://vitess.io/overview/concepts.html#keyspace-id">Keyspace IDs</a> can be
-completely hidden from the application. They gave a live demo of
-<a href="http://vitess.io/user-guide/sharding-kubernetes.html">resharding the Guestbook sample app</a>,
-which now knows nothing about shards, and explained how new features in VTGate
-make all of this possible.</p>
+<h3 id="estimating-total-resources">Estimating total resources</h3>
 
-<iframe src="http://docs.google.com/gview?url=http://vitess.io/resources/percona-2016.pdf&embedded=true" style="width:643px; height:379px; margin-top: 20px;" frameborder="0"></iframe>
+<p>Although Vitess helps you scale indefinitely, the various layers do consume CPU and memory. Currently, the cost of Vitess servers is dominated by the RPC framework which we use: gRPC (gRPC is a relatively young product). So, Vitess servers are expected to get more efficient over time as there are improvements in gRPC as well as the Go runtime. For now, you can use the following rules of thumb to budget resources for Vitess:</p>
 
-<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="http://vitess.io/resources/percona-2016.pdf">download slides</a></div>
+<p>Every MySQL instance that serves traffic requires one VTTablet, which is in turn expected to consume an equal amount of CPU. So, if MySQL consumes 8 CPUs, VTTablet is likely going to consume another 8.</p>
 
-<h2 id="coreos-meetup-january-2016">CoreOS Meetup, January 2016</h2>
+<p>The memory consumed by VTTablet depends on QPS and result size, but you can start off with the rule of thumb of requesting 1 GB/CPU.</p>
 
-<p>Vitess team member <a href="https://github.com/enisoc">Anthony Yeh</a>&#39;s talk at
-the <a href="http://www.meetup.com/coreos/events/228233948/">January 2016 CoreOS Meetup</a>
-discussed challenges and techniques for running distributed databases
-within Kubernetes, followed by a deep dive into the design trade-offs
-of the <a href="https://github.com/youtube/vitess/tree/master/examples/kubernetes">Vitess on Kubernetes</a>
-deployment templates.</p>
+<p>As for VTGate, double the total number of CPUs you’ve allocated for VTTablet. That should be approximately how much the VTGates are expected to consume. In terms of memory, you should again budget about 1 GB/CPU (needs verification).</p>
 
-<iframe src="http://docs.google.com/gview?url=http://vitess.io/resources/coreos-meetup-2016-01-27.pdf&embedded=true" style="width:643px; height:379px; margin-top: 20px;" frameborder="0"></iframe>
+<p>Vitess servers will use disk space for their logs. A smoothly running server should create very little log spam. However, log files can grow big very quickly if there are too many errors. It will be wise to run a log purger daemon if you’re concerned about filling up disk.</p>
 
-<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="http://vitess.io/resources/coreos-meetup-2016-01-27.pdf">download slides</a></div>
+<p>Vitess servers are also likely to add about 2 ms of round-trip latency per MySQL call. This may result in some hidden costs that may or may not be negligible. On the app side, if a significant time is spent making database calls, then you may have to run additional threads or workers to compensate for the delay, which may result in additional memory requirements.</p>
 
-<h2 id="oracle-openworld-2015">Oracle OpenWorld 2015</h2>
+<p>The client driver CPU usage may be different from a normal MySQL driver. That may require you to allocate more CPU per app thread.</p>
 
-<p>Vitess team member <a href="https://github.com/enisoc">Anthony Yeh</a>&#39;s talk at
-Oracle OpenWorld 2015 focused on
-what the <a href="http://cncf.io">Cloud Native Computing</a> paradigm means when
-applied to MySQL in the cloud. The talk also included a deep dive into
-<a href="http://vitess.io/user-guide/sharding.html#resharding">transparent, live resharding</a>, one of the key
-features of Vitess that makes it well-adapted for a Cloud Native environment.</p>
+<p>On the server side, this could result in longer running transactions, which could weigh down MySQL.</p>
 
-<iframe src="http://docs.google.com/gview?url=http://vitess.io/resources/openworld-2015-vitess.pdf&embedded=true" style="width:643px; height:379px; margin-top: 20px;" frameborder="0"></iframe>
+<p>With the above numbers as starting point, the next step will be to set up benchmarks that generate production representative load. If you cannot afford this luxury, you may have to go into production with some over-provisioning, just in case.</p>
 
-<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="http://vitess.io/resources/openworld-2015-vitess.pdf">download slides</a></div>
+<h3 id="mapping-topology-to-hardware">Mapping topology to hardware</h3>
 
-<h2 id="percona-live-2015">Percona Live 2015</h2>
+<p>The different Vitess components have different resource requirements e.g. vtgate requires little disk in comparison to vttablet. Therefore, the components should be mapped to different machine classes for optimal resource usage. If you’re using a cluster manager (such as Kubernetes), the automatic scheduler will do this for you. Otherwise, you have to allocate physical machines and plan out how you’re going to map servers onto them.</p>
 
-<p>Vitess team member <a href="https://github.com/enisoc">Anthony Yeh</a>&#39;s talk at
-Percona Live 2015 provided an overview of Vitess as well as an explanation
-of how Vitess has evolved to live in a containerized world with
-Kubernetes and Docker.</p>
+<p>Machine classes needed:</p>
 
-<iframe src="http://docs.google.com/gview?url=http://vitess.io/resources/percona-2015-vitess-and-kubernetes.pdf&embedded=true" style="width:643px; height:379px; margin-top: 20px;" frameborder="0"></iframe>
+<h4 id="mysql-vttablet">MySQL + vttablet</h4>
 
-<div style="text-align: right; width: 100%; margin-bottom:20px"><a href="https://github.com/youtube/vitess/blob/master/doc/slides/Percona2015.pptx?raw=true">download slides</a></div>
+<p>You’ll need database-class machines that are likely to have SSDs, and enough RAM to fit the MySQL working set in buffer cache. Make sure that there will be sufficient CPU left for VTTablet to run on them.</p>
 
-<h2 id="google-i-o-2014-scaling-with-go-youtube-39-s-vitess">Google I/O 2014 - Scaling with Go: YouTube&#39;s Vitess</h2>
+<p>The VTTablet provisioning will be dictated by the MySQL instances they run against. However, soon after launch, it’s recommended to shard these instances to a data size of 100-300 GB. This should also typically reduce the per-MySQL CPU usage to around 2-4 CPUS depending on the load pattern.</p>
 
-<p>In this talk, <a href="https://github.com/sougou">Sugu Sougoumarane</a>
-from the Vitess team talks about how Vitess
-solved YouTube&#39;s scalability problems as well as about tips and techniques
-used to scale with Go.<br><br></p>
+<h4 id="vtgate">VTGate</h4>
 
-<iframe width="640" height="360" src="https://www.youtube.com/embed/midJ6b1LkA0" frameborder="0" allowfullscreen></iframe>
+<p>For VTGates, you’ll need a class of machines that would be CPU heavy, but may be light on memory usage, and should require normal hard disks, for binary and logs only.</p>
+
+<p>It’s advisable to run more instances than there are machines. VTGates are happiest when they’re consuming between 2-4 CPUs. So, if your total requirement was 400 CPUs, and your VTGate class machine has 48 cores each, you’ll need about 10 such machines and you’ll be running about 10 VTGates per box.</p>
+
+<p>You may have to add a few more app class machines to absorb any additional CPU and latency overheads.</p>
+
+<h2 id="lock-service-setup">Lock service setup</h2>
+
+<p>The Lock Service should be running, and both the global and local instances
+should be up. See the
+<a href="http://vitess.io/doc/TopologyService">Topology Service</a>
+document for more information.</p>
+
+<p>Each lock service implementation supports a couple configuration command line
+parameters, they need to be specified for each Vitess process.</p>
+
+<p>For sizing purposes, the Vitess processes do not access the lock service very
+much. Each <em>vtgate</em> process keeps a few watches on a few local nodes (VSchema
+and SrvKeyspace). Each <em>vttablet</em> process will keep its on Tablet record up to
+date, but it usually doesn&#39;t change. The <em>vtctld</em> process will access it a lot
+more, but only on demand to display web pages.</p>
+
+<p>As mentioned previously, if the setup is only in one cell, the global and local
+instances can be combined. Just use different top-level directories.</p>
+
+<h2 id="production-testing">Production testing</h2>
+
+<p>Before running Vitess in production, please make yourself comfortable first with the different operations. We recommend to go through the following scenarios on a non-production system.</p>
+
+<p>Here is a short list of all the basic workflows Vitess supports:</p>
+
+<ul>
+<li><a href="http://vitess.io/user-guide/reparenting.html">Failover / Reparents</a></li>
+<li><a href="http://vitess.io/user-guide/backup-and-restore.html">Backup/Restore</a></li>
+<li><a href="http://vitess.io/user-guide/schema-management.html">Schema Management</a> / <a href="http://vitess.io/user-guide/pivot-schema-changes.html">Pivot Schema Changes</a></li>
+<li><a href="http://vitess.io/user-guide/sharding.html">Resharding</a> / <a href="http://vitess.io/user-guide/horizontal-sharding.html">Horizontal Resharding Tutorial</a></li>
+<li><a href="http://vitess.io/user-guide/upgrading.html">Upgrading</a></li>
+</ul>
 
       </div>
     </div>

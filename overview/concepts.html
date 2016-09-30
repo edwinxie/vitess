@@ -74,7 +74,8 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right" id="standard-menu-links">
-        <li><a href="/overview/">Guides</a></li>
+        <li><a href="/overview/">Overview</a></li>
+        <li><a href="/user-guide/introduction.html">Guides</a></li>
         <li><a href="/reference/vitess-api.html">Reference</a></li>
         <li><a href="http://blog.vitess.io">Blog</a></li>
         <li><a href="https://github.com/youtube/vitess"><i class="fa fa-github"></i> GitHub</a></li>
@@ -120,6 +121,14 @@
             </li>
             <li><a href="/user-guide/vitess-replication.html">Vitess and Replication</a></li>
             <li><a href="/user-guide/transport-security-model.html">Transport Security Model</a></li>
+            <li style="padding-bottom: 0"><a href="/user-guide/launching.html">Launching</a>
+              <ul style="display: block">
+                <li><a href="/user-guide/scalability-philosophy.html">Scalability Philosophy</a></li>
+                <li><a href="/user-guide/production-planning.html">Production Planning</a></li>
+                <li><a href="/user-guide/server-configuration.html">Server Configuration</a></li>
+                <li style="padding-bottom: 0"><a href="/user-guide/troubleshooting.html">Troubleshooting</a></li>
+              </ul>
+            </li>
             <li><a href="/user-guide/upgrading.html">Upgrading</a></li>
           </ul>
         </li>
@@ -204,6 +213,14 @@
             </li>
             <li><a href="/user-guide/vitess-replication.html">Vitess and Replication</a></li>
             <li><a href="/user-guide/transport-security-model.html">Transport Security Model</a></li>
+            <li style="padding-bottom: 0"><a href="/user-guide/launching.html">Launching</a>
+              <ul style="display: block">
+                <li><a href="/user-guide/scalability-philosophy.html">Scalability Philosophy</a></li>
+                <li><a href="/user-guide/production-planning.html">Production Planning</a></li>
+                <li><a href="/user-guide/server-configuration.html">Server Configuration</a></li>
+                <li style="padding-bottom: 0"><a href="/user-guide/troubleshooting.html">Troubleshooting</a></li>
+              </ul>
+            </li>
             <li><a href="/user-guide/upgrading.html">Upgrading</a></li>
           </ul>
         </li>
@@ -335,9 +352,7 @@ performs.</p>
          replication (if necessary) and go back to being <em>rdonly</em>.</li>
 </ul>
 
-<div style="display:none">
-TODO: Add pointer to complete list of types and explain how to update type?
-</div>
+<!-- TODO: Add pointer to complete list of types and explain how to update type? -->
 
 <h2 id="keyspace-graph">Keyspace Graph</h2>
 
