@@ -268,6 +268,7 @@
 <li><a href="#serving-graph">Serving Graph</a></li>
 <li><a href="#shards">Shards</a></li>
 <li><a href="#tablets">Tablets</a></li>
+<li><a href="#workflows">Workflows</a></li>
 </ul>
 
 <h2 id="generic">Generic</h2>
@@ -2630,11 +2631,11 @@
 
 <h3 id="setshardservedtypes">SetShardServedTypes</h3>
 
-<p>Sets a given shard&#39;s served tablet types. Does not rebuild any serving graph.</p>
+<p>Add or remove served type to/from a shard. This is meant as an emergency function. It does not rebuild any serving graph i.e. does not run &#39;RebuildKeyspaceGraph&#39;.</p>
 
 <h4 id="example">Example</h4>
 
-<pre class="command-example">SetShardServedTypes &lt;keyspace/shard&gt; [&lt;served tablet type1&gt;,&lt;served tablet type2&gt;,...]</pre>
+<pre class="command-example">SetShardServedTypes [--cells=c1,c2,...] [--remove] &lt;keyspace/shard&gt; &lt;served tablet type&gt;</pre>
 
 <h4 id="flags">Flags</h4>
 
@@ -2661,7 +2662,7 @@
 
 <ul>
 <li><code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitepace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.</li>
-<li><p><code>&lt;served tablet type&gt;</code> &ndash; Optional. The vttablet&#39;s role. Valid values are:</p>
+<li><p><code>&lt;served tablet type&gt;</code> &ndash; Required. The vttablet&#39;s role. Valid values are:</p>
 
 <ul>
 <li><code>backup</code> &ndash; A slaved copy of data that is offline to queries other than for backup purposes</li>
@@ -2956,6 +2957,7 @@
 <li><a href="#inittablet">InitTablet</a></li>
 <li><a href="#ping">Ping</a></li>
 <li><a href="#refreshstate">RefreshState</a></li>
+<li><a href="#refreshstatebyshard">RefreshStateByShard</a></li>
 <li><a href="#reparenttablet">ReparentTablet</a></li>
 <li><a href="#restorefrombackup">RestoreFromBackup</a></li>
 <li><a href="#runhealthcheck">RunHealthCheck</a></li>
@@ -3367,6 +3369,42 @@
 <li>The <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;RefreshState&gt;</code> command. This error occurs if the command is not called with exactly one argument.</li>
 </ul>
 
+<h3 id="refreshstatebyshard">RefreshStateByShard</h3>
+
+<p>Runs &#39;RefreshState&#39; on all tablets in the given shard.</p>
+
+<h4 id="example">Example</h4>
+
+<pre class="command-example">RefreshStateByShard [-cells=c1,c2,...] &lt;keyspace/shard&gt;</pre>
+
+<h4 id="flags">Flags</h4>
+
+<table><thead>
+<tr>
+<th style="text-align: left">Name</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Definition</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">cells</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">Specifies a comma-separated list of cells whose tablets are included. If empty, all cells are considered.</td>
+</tr>
+</tbody></table>
+
+<h4 id="arguments">Arguments</h4>
+
+<ul>
+<li><code>&lt;keyspace/shard&gt;</code> &ndash; Required. The name of a sharded database that contains one or more tables as well as the shard associated with the command. The keyspace must be identified by a string that does not contain whitepace, while the shard is typically identified by a string in the format <code>&lt;range start&gt;-&lt;range end&gt;</code>.</li>
+</ul>
+
+<h4 id="errors">Errors</h4>
+
+<ul>
+<li>The <code>&lt;keyspace/shard&gt;</code> argument is required for the <code>&lt;RefreshStateByShard&gt;</code> command. This error occurs if the command is not called with exactly one argument.</li>
+</ul>
+
 <h3 id="reparenttablet">ReparentTablet</h3>
 
 <p>Reparent a tablet to the current master in the shard. This only works if the current slave position matches the last known reparent action.</p>
@@ -3575,6 +3613,135 @@
 <ul>
 <li>The <code>&lt;tablet alias&gt;</code> argument is required for the <code>&lt;UpdateTabletAddrs&gt;</code> command. This error occurs if the command is not called with exactly one argument.</li>
 <li>malformed address: %v</li>
+</ul>
+
+<h2 id="workflows">Workflows</h2>
+
+<ul>
+<li><a href="#workflowaction">WorkflowAction</a></li>
+<li><a href="#workflowcreate">WorkflowCreate</a></li>
+<li><a href="#workflowstart">WorkflowStart</a></li>
+<li><a href="#workflowstop">WorkflowStop</a></li>
+<li><a href="#workflowtree">WorkflowTree</a></li>
+<li><a href="#workflowwait">WorkflowWait</a></li>
+</ul>
+
+<h3 id="workflowaction">WorkflowAction</h3>
+
+<p>Sends the provided action name on the specified path.</p>
+
+<h4 id="example">Example</h4>
+
+<pre class="command-example">WorkflowAction &lt;path&gt; &lt;name&gt;</pre>
+
+<h4 id="arguments">Arguments</h4>
+
+<ul>
+<li><code>&lt;name&gt;</code> &ndash; Required.</li>
+</ul>
+
+<h4 id="errors">Errors</h4>
+
+<ul>
+<li>the <code>&lt;path&gt;</code> and <code>&lt;name&gt;</code> arguments are required for the <code>&lt;WorkflowAction&gt;</code> command This error occurs if the command is not called with exactly 2 arguments.</li>
+<li>no workflow.Manager registered</li>
+</ul>
+
+<h3 id="workflowcreate">WorkflowCreate</h3>
+
+<p>Creates the workflow with the provided parameters. The workflow is also started, unless -nostart is specified.</p>
+
+<h4 id="example">Example</h4>
+
+<pre class="command-example">WorkflowCreate [-nostart] &lt;factoryName&gt; [parameters...]</pre>
+
+<h4 id="flags">Flags</h4>
+
+<table><thead>
+<tr>
+<th style="text-align: left">Name</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Definition</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">start</td>
+<td style="text-align: left">Boolean</td>
+<td style="text-align: left">If set, the workflow will also be started.</td>
+</tr>
+</tbody></table>
+
+<h4 id="arguments">Arguments</h4>
+
+<ul>
+<li><code>&lt;factoryName&gt;</code> &ndash; Required.</li>
+</ul>
+
+<h4 id="errors">Errors</h4>
+
+<ul>
+<li>the <code>&lt;factoryName&gt;</code> argument is required for the <code>&lt;WorkflowCreate&gt;</code> command This error occurs if the command is not called with at least one argument.</li>
+<li>no workflow.Manager registered</li>
+</ul>
+
+<h3 id="workflowstart">WorkflowStart</h3>
+
+<p>Starts the workflow.</p>
+
+<h4 id="example">Example</h4>
+
+<pre class="command-example">WorkflowStart &lt;uuid&gt;</pre>
+
+<h4 id="errors">Errors</h4>
+
+<ul>
+<li>the <code>&lt;uuid&gt;</code> argument is required for the <code>&lt;WorkflowStart&gt;</code> command This error occurs if the command is not called with exactly one argument.</li>
+<li>no workflow.Manager registered</li>
+</ul>
+
+<h3 id="workflowstop">WorkflowStop</h3>
+
+<p>Stops the workflow.</p>
+
+<h4 id="example">Example</h4>
+
+<pre class="command-example">WorkflowStop &lt;uuid&gt;</pre>
+
+<h4 id="errors">Errors</h4>
+
+<ul>
+<li>the <code>&lt;uuid&gt;</code> argument is required for the <code>&lt;WorkflowStop&gt;</code> command This error occurs if the command is not called with exactly one argument.</li>
+<li>no workflow.Manager registered</li>
+</ul>
+
+<h3 id="workflowtree">WorkflowTree</h3>
+
+<p>Displays a JSON representation of the workflow tree.</p>
+
+<h4 id="example">Example</h4>
+
+<pre class="command-example">WorkflowTree </pre>
+
+<h4 id="errors">Errors</h4>
+
+<ul>
+<li>the <code>&lt;WorkflowTree&gt;</code> command takes no parameter This error occurs if the command is not called with exactly 0 arguments.</li>
+<li>no workflow.Manager registered</li>
+</ul>
+
+<h3 id="workflowwait">WorkflowWait</h3>
+
+<p>Waits for the workflow to finish.</p>
+
+<h4 id="example">Example</h4>
+
+<pre class="command-example">WorkflowWait &lt;uuid&gt;</pre>
+
+<h4 id="errors">Errors</h4>
+
+<ul>
+<li>the <code>&lt;uuid&gt;</code> argument is required for the <code>&lt;WorkflowWait&gt;</code> command This error occurs if the command is not called with exactly one argument.</li>
+<li>no workflow.Manager registered</li>
 </ul>
 
       </div>
