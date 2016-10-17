@@ -209,13 +209,13 @@ mkdir -p $VTTOP/.git/hooks
 ln -sf $VTTOP/misc/git/pre-commit $VTTOP/.git/hooks/pre-commit
 
 # Download chromedriver
-echo "Installing selenium and chromedriver"
+echo "Installing selenium and chromedriver 2.24"
 selenium_dist=$VTROOT/dist/selenium
 mkdir -p $selenium_dist
 virtualenv $selenium_dist
-$selenium_dist/bin/pip install selenium
+$selenium_dist/bin/pip install -U selenium
 mkdir -p $VTROOT/dist/chromedriver
-curl -sL http://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip > chromedriver_linux64.zip
+curl -sL http://chromedriver.storage.googleapis.com/2.24/chromedriver_linux64.zip > chromedriver_linux64.zip
 unzip -o -q chromedriver_linux64.zip -d $VTROOT/dist/chromedriver
 rm chromedriver_linux64.zip
 

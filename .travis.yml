@@ -84,10 +84,10 @@ env:
     #       All our tests should be spread out as evenly as possible across these 5 slots.
     #       We should always utilize all 5 slots because the cost of the setup is high (up to one minute).
     # NOTE: Use "" if you specify a space separated list of multiple targets.
-    - TEST_MATRIX="-shard 0"
-    - TEST_MATRIX="-shard 1"
-    - TEST_MATRIX="-shard 2"
-    - TEST_MATRIX="-shard 3"
+    #- TEST_MATRIX="-shard 0"
+      # - TEST_MATRIX="-shard 1"
+      #- TEST_MATRIX="-shard 2"
+      #- TEST_MATRIX="-shard 3"
     - TEST_MATRIX="-shard 4"
 before_install:
   - travis/download_mariadb.sh
@@ -113,7 +113,7 @@ script:
   - go run travis/log_gomaxprocs.go
   - |
     if [[ $TRAVIS_PULL_REQUEST = "false" ]]; then
-      go run test.go $TEST_FLAGS $TEST_MATRIX
+      go run test.go $TEST_FLAGS $TEST_MATRIX -tag=webdriver
     else
       # Exclude webdriver tests on Travis PRs since the sauce addon does not work for PRs
       go run test.go $TEST_FLAGS $TEST_MATRIX -exclude=webdriver
