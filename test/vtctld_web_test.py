@@ -80,7 +80,7 @@ class TestVtctldWeb(unittest.TestCase):
       # Only testing against Chrome for now
       cls.driver = webdriver.Chrome()
       cls.driver.set_window_position(0, 0)
-      cls.driver.set_window_size(1920, 1280)
+      cls.driver.set_window_size(1280, 960)
 
     port = environment.reserve_ports(1)
     vttest_environment.base_port = port
